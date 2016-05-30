@@ -18,7 +18,7 @@ namespace MyHomework_3
         {
             get
             {
-                using (FileStream fstream = File.OpenRead(@"C:\Users\Makc\Documents\Visual Studio 2015\Projects\MyHomework_3\MyHomework_3\bin\Debug\conf.inim"))
+                using (FileStream fstream = new FileStream("option.ini", FileMode.OpenOrCreate))
                 {
                     byte[] array = new byte[fstream.Length];
                     fstream.Read(array, 0, array.Length);

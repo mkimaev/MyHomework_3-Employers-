@@ -10,21 +10,12 @@ namespace MyHomework_3
     [Serializable]
     class Employer : Person
     {
-        public string company;
+        private string company;
         public string Company
         {
-            protected set { }
-            get
-            {
-                using (FileStream fstream = File.OpenRead(@"C:\Users\Makc\Documents\Visual Studio 2015\Projects\MyHomework_3\MyHomework_3\bin\Debug\f_c.txt"))
-                {
-                    byte[] array = new byte[fstream.Length];
-                    fstream.Read(array, 0, array.Length);
-                    string compa = Encoding.Default.GetString(array);
-                    company = compa;
-                }
-                return company;
-            }
+            set { }
+            get { company = "Poogle";
+                  return company; }
         }
         public string Post { get; set; }
         public Employer() { }

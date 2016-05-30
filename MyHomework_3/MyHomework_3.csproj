@@ -44,9 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Employer.cs" />
-    <Compile Include="ISerialize.cs" />
     <Compile Include="Menu.cs" />
-    <Compile Include="MSerialize.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
