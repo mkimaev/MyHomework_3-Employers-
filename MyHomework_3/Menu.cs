@@ -57,7 +57,7 @@ namespace MyHomework_3
 
             while (true)
             {
-                Console.WriteLine("\nБаза данных о сотрудниках фирмы Google_Ukraine\n");
+                Console.WriteLine("\nБаза данных о сотрудниках фирмы\n");
                 Console.Write("Введите команду: ");
                 try
                 {
@@ -72,13 +72,15 @@ namespace MyHomework_3
                             string name2 = Console.ReadLine();
                             Console.WriteLine("Введите возраст:");
                             int age2 = Convert.ToInt32(Console.ReadLine());
+                            Console.WriteLine("Введите название фирмы:");
+                            string company2 = Console.ReadLine();
                             Console.WriteLine("Введите должность:");
                             string post2 = Console.ReadLine();
-                            employers.Add(id2, new Employer(name2, age2, post2));
-                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            employers.Add(id2, new Employer(name2, age2, company2, post2));
+                            Console.ForegroundColor = ConsoleColor.DarkGreen;
                             Console.WriteLine("\nДобавлена запись");
-                            employers[id2].Info();
-                            Thread.Sleep(1000);
+                            ShowInfo_ID(id2);
+                            Thread.Sleep(2000);
                             Console.ResetColor();
                             Console.Clear();
                             break;
@@ -88,10 +90,7 @@ namespace MyHomework_3
                             Console.WriteLine("\nВыполнение запроса...");
                             Thread.Sleep(1100);
                             Console.Clear();
-                            foreach (KeyValuePair<string, Employer> p in employers)
-                            {
-                                p.Value.Info();
-                            }
+                            ShowInfo();
                             Console.ResetColor();
                             Console.ForegroundColor = ConsoleColor.Blue;
                             Console.WriteLine("\nКол-во сотрудников: {0}", employers.Count);
@@ -99,22 +98,13 @@ namespace MyHomework_3
                             break;
                         case "del":
                             Console.Clear();
-                            foreach (KeyValuePair<string, Employer> p in employers)
-                            {
-                                Console.ForegroundColor = ConsoleColor.Magenta;
-                                Console.Write("id  " + p.Key);
-                                Console.ResetColor();
-                                p.Value.Info();
-                            }
+                            ShowInfo();
                             Console.WriteLine("\nВведите ID для удаления:");
                             string num = Console.ReadLine();
                             employers.Remove(num);
                             Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("ID {0} удалена из списка", num);
                             Console.ResetColor();
-                            Thread.Sleep(1000);
-                            Console.Clear();
-
                             break;
                         case "info_id":
                             foreach (KeyValuePair<string, Employer> p in employers)
@@ -126,7 +116,7 @@ namespace MyHomework_3
                             }
                             Console.WriteLine("\nВведите ID сотрудника:");
                             string id3 = Console.ReadLine();
-                            employers[id3].Info();
+                            ShowInfo_ID(id3);
                             Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("\nКоманда выполнена");
                             Console.ResetColor();
@@ -179,5 +169,21 @@ namespace MyHomework_3
                 }
             }
         }
+        public void ShowInfo()
+        {
+            foreach (KeyValuePair<string, Employer> person in Data_Emp)
+            {
+                string s1 = String.Format("Id {4} | Имя: {0} | Возраст: {1} | Компания: {2} | Должность: {3} |", person.Value.Name, person.Value.Age, person.Value.Company, person.Value.Post, person.Key);
+                Console.WriteLine(new String('-', s1.Length));
+                Console.WriteLine(s1);
+            }
+        }
+        public void ShowInfo_ID(string idm)
+        {
+                string s1 = String.Format("Имя: {0} | Возраст: {1} | Компания: {2} | Должность: {3} |", Data_Emp[idm].Name, Data_Emp[idm].Age, Data_Emp[idm].Company, Data_Emp[idm].Post);
+                Console.WriteLine(new String('-', s1.Length));
+                Console.WriteLine(s1);
+        }
     }
+
 }
