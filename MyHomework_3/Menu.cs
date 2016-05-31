@@ -31,26 +31,35 @@ namespace MyHomework_3
         }
         public void Show ()
         {
-            if (Config == "binary")
+            FileInfo fi = new FileInfo("option.ini");
+            //File.Exists("option.ini");
+            if (fi.Exists)
             {
-                BinaryFormatter bf2 = new BinaryFormatter();
-                using (FileStream fs = new FileStream("emps.dat", FileMode.OpenOrCreate))
+                if (Config == "binary")
                 {
-                    Dictionary<string, Employer> data = new Dictionary<string, Employer>();
-                    data = (Dictionary<string, Employer>)bf2.Deserialize(fs);
-                    Data_Emp = data;
+                    BinaryFormatter bf2 = new BinaryFormatter();
+                    using (FileStream fs = new FileStream("emps.dat", FileMode.OpenOrCreate))
+                    {
+                        Dictionary<string, Employer> data = new Dictionary<string, Employer>();
+                        data = (Dictionary<string, Employer>)bf2.Deserialize(fs);
+                        Data_Emp = data;
+                    }
                 }
-            }
 
-            else if (Config != "binary")
-            {
-                XmlSerializer xs_2 = new XmlSerializer(typeof(Dictionary<string, Employer>));
-                using (FileStream fs_2 = new FileStream("emps.xml", FileMode.OpenOrCreate))
+                else if (Config != "binary")
                 {
-                    Dictionary<string, Employer> data_xml = new Dictionary<string, Employer>();
-                    xs_2.Serialize(fs_2, data_xml);
+                    XmlSerializer xs_2 = new XmlSerializer(typeof(Dictionary<string, Employer>));
+                    using (FileStream fs_2 = new FileStream("emps.xml", FileMode.OpenOrCreate))
+                    {
+                        Dictionary<string, Employer> data_xml = new Dictionary<string, Employer>();
+                        xs_2.Serialize(fs_2, data_xml);
+                    }
                 }
             }
+            else {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Ошибка загрузки!\nНе найден конфигурационный файл \"option.ini\". \nСоздайте файл option.ini с текстом binary");
+                return; }
 
             Dictionary<string, Employer> employers = new Dictionary<string, Employer>();
             employers = Data_Emp;
