@@ -13,7 +13,7 @@ namespace MyHomework_3
     class Menu
     {
         public Dictionary<string, Employer> Data_Emp { get; set; }
-        public string config;
+        private string config;
         public string Config
         {
             get
@@ -31,8 +31,8 @@ namespace MyHomework_3
         }
         public void Show ()
         {
+        link1:
             FileInfo fi = new FileInfo("option.ini");
-            //File.Exists("option.ini");
             if (fi.Exists)
             {
                 if (Config == "binary")
@@ -45,22 +45,55 @@ namespace MyHomework_3
                         Data_Emp = data;
                     }
                 }
+                //// убираю сериализацию через XmlSerializer, она не поддерживает коллекцию типа Dictionary. Насколько я понял)
 
-                else if (Config != "binary")
+                //else if (Config == "xml")
+                //{
+                //    XmlSerializer xs_2 = new XmlSerializer(typeof(Dictionary<string, Employer>));
+                //    using (FileStream fs_2 = new FileStream("emps.xml", FileMode.OpenOrCreate))
+                //    {
+                //        Dictionary<string, Employer> data_xml = new Dictionary<string, Employer>();
+                //        xs_2.Serialize(fs_2, data_xml);
+                //    }
+                //}
+                else if (Config != "binary" | Config != "xml")
                 {
-                    XmlSerializer xs_2 = new XmlSerializer(typeof(Dictionary<string, Employer>));
-                    using (FileStream fs_2 = new FileStream("emps.xml", FileMode.OpenOrCreate))
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("В конфигурационном файле option.ini указаны некорректные данные - {0}\n", Config);
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine("\nВыполняется запись по умолчанию (binary) в конфигурационный файл option.ini...");
+                    Thread.Sleep(2000);
+                    using (FileStream fstream2 = new FileStream("option.ini", FileMode.Truncate))
                     {
-                        Dictionary<string, Employer> data_xml = new Dictionary<string, Employer>();
-                        xs_2.Serialize(fs_2, data_xml);
+                        string text = "binary";
+                        byte[] array = Encoding.Default.GetBytes(text);
+                        fstream2.Write(array, 0, array.Length);
                     }
+                    Console.WriteLine("\nКонфигурационные данные перезаписаны!");
+                    Console.ResetColor();
+                    goto link1;
+
                 }
             }
-            else {
+            else
+            {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Ошибка загрузки!\nНе найден конфигурационный файл \"option.ini\". \nСоздайте файл option.ini с текстом binary");
-                return; }
+                Console.WriteLine("Ошибка загрузки!\nНе найден конфигурационный файл \"option.ini\". \n");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("\nВыполняется создание конфигурационного файла option.ini, пожалуйста подождите...");
+                Thread.Sleep(4000);
+                using (FileStream fstream2 = new FileStream("option.ini", FileMode.CreateNew))
+                {
+                    string text = "binary";
+                    byte[] array = Encoding.Default.GetBytes(text);
+                    fstream2.Write(array, 0, array.Length);
+                }
+                Console.WriteLine("\nКонфигурационный файл option.ini создан!");
+                Console.ResetColor();
+                goto link1;
 
+            }
+            
             Dictionary<string, Employer> employers = new Dictionary<string, Employer>();
             employers = Data_Emp;
 
@@ -148,22 +181,23 @@ namespace MyHomework_3
                                 {
                                     bf.Serialize(fs, empl_2);
                                     Console.ForegroundColor = ConsoleColor.Green;
-                                    Console.WriteLine("Данные сохранены (сериализованы через bin)\n");
+                                    Console.WriteLine("Данные сохранены (сериализованы через BinaryFormatter)\n");
                                     Console.WriteLine("Сеанс окончен! До свидания!\n");
                                 }
                             }
-                            else if (Config == "xml")
-                            {
-                                XmlSerializer xs = new XmlSerializer(typeof(Dictionary<string, Employer>));
-                                using (FileStream fs_2 = new FileStream("emps.xml", FileMode.OpenOrCreate))
-                                {
-                                    xs.Serialize(fs_2, empl_2);
-                                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                                    Console.WriteLine("Данные сохранены (сериализованы через xml)\n");
-                                    Console.WriteLine("Сеанс окончен! До свидания!\n");
-                                }
-                            }
-                            else { Console.WriteLine("ошибка"); }
+                            //// убираю сериализацию через XmlSerializer, она не поддерживает коллекцию типа Dictionary. Насколько я понял)
+                            //else if (Config == "xml")
+                            //{
+                            //    XmlSerializer xs = new XmlSerializer(typeof(Dictionary<string, Employer>));
+                            //    using (FileStream fs_2 = new FileStream("emps.xml", FileMode.OpenOrCreate))
+                            //    {
+                            //        xs.Serialize(fs_2, empl_2);
+                            //        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                            //        Console.WriteLine("Данные сохранены (сериализованы через xml)\n");
+                            //        Console.WriteLine("Сеанс окончен! До свидания!\n");
+                            //    }
+                            //}
+                            //else { Console.WriteLine("ошибка"); }
                             return;
                         case "exit*":
                             Console.WriteLine("Сеанс окончен! До свидания!\n");
