@@ -18,23 +18,39 @@ namespace MyHomework_3
         {
             get
             {
-                using (FileStream fstream = new FileStream("option.ini", FileMode.OpenOrCreate))
+                FileInfo fi = new FileInfo("option.ini");
+                if (fi.Exists)
                 {
-                    byte[] array = new byte[fstream.Length];
-                    fstream.Read(array, 0, array.Length);
-                    string conf = Encoding.Default.GetString(array);
-                    config = conf;
+                    using (FileStream fstream = new FileStream("option.ini", FileMode.OpenOrCreate))
+                    {
+                        byte[] array = new byte[fstream.Length];
+                        fstream.Read(array, 0, array.Length);
+                        string conf = Encoding.Default.GetString(array);
+                        config = conf;
+                    }
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Ошибка загрузки!\nНе найден конфигурационный файл \"option.ini\". \n");
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine("Выполняется создание конфигурационного файла option.ini, пожалуйста подождите...");
+                    Thread.Sleep(4000);
+                    using (FileStream fstream2 = new FileStream("option.ini", FileMode.CreateNew))
+                    {
+                        string text = "binary";
+                        byte[] array = Encoding.Default.GetBytes(text);
+                        fstream2.Write(array, 0, array.Length);
+                        config = text;
+                    }
+                    Console.WriteLine("\nКонфигурационный файл option.ini создан!");
+                    Console.ResetColor();
                 }
                 return config;
             }
-            protected set { }
         }
         public void Show ()
         {
-        link1:
-            FileInfo fi = new FileInfo("option.ini");
-            if (fi.Exists)
-            {
                 if (Config == "binary")
                 {
                     BinaryFormatter bf2 = new BinaryFormatter();
@@ -56,12 +72,12 @@ namespace MyHomework_3
                 //        xs_2.Serialize(fs_2, data_xml);
                 //    }
                 //}
-                else if (Config != "binary" | Config != "xml")
+                else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("В конфигурационном файле option.ini указаны некорректные данные - {0}\n", Config);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.WriteLine("\nВыполняется запись по умолчанию (binary) в конфигурационный файл option.ini...");
+                    Console.WriteLine("Выполняется запись по умолчанию (binary) в конфигурационный файл option.ini...");
                     Thread.Sleep(2000);
                     using (FileStream fstream2 = new FileStream("option.ini", FileMode.Truncate))
                     {
@@ -71,29 +87,9 @@ namespace MyHomework_3
                     }
                     Console.WriteLine("\nКонфигурационные данные перезаписаны!");
                     Console.ResetColor();
-                    goto link1;
-
+                Show();
                 }
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Ошибка загрузки!\nНе найден конфигурационный файл \"option.ini\". \n");
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.WriteLine("\nВыполняется создание конфигурационного файла option.ini, пожалуйста подождите...");
-                Thread.Sleep(4000);
-                using (FileStream fstream2 = new FileStream("option.ini", FileMode.CreateNew))
-                {
-                    string text = "binary";
-                    byte[] array = Encoding.Default.GetBytes(text);
-                    fstream2.Write(array, 0, array.Length);
-                }
-                Console.WriteLine("\nКонфигурационный файл option.ini создан!");
-                Console.ResetColor();
-                goto link1;
-
-            }
-            
+  
             Dictionary<string, Employer> employers = new Dictionary<string, Employer>();
             employers = Data_Emp;
 
