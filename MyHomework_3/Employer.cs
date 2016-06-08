@@ -4,12 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace MyHomework_3
 {
     [Serializable]
-    class Employer : Person
+    public class Employer : Person
     {
+        [XmlElement]
         public string Company { get; set; }
         public string Post { get; set; }
         public Employer() { }
